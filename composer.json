@@ -1,5 +1,5 @@
 {
-  "name": "ruben-garcia-gjuinsa/kata-skeleton",
+  "name": "ruben-garcia-gjuinsa/list-manager",
   "require-dev": {
     "php": "^7.4",
     "phpunit/phpunit": "^8.5"
