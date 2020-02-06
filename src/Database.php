@@ -23,8 +23,10 @@ class Database
         return $this->conn->query('SELECT * FROM list');
     }
 
-    public function setList()
+    public function setList($name)
     {
-
+        $stmt = $this->conn->prepare('INSERT INTO list (name) VALUES (:name);');
+        $stmt->bindValue(':name', $name, SQLITE3_TEXT);
+        return $stmt->execute();
     }
 }
