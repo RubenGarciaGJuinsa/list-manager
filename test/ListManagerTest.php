@@ -12,6 +12,7 @@ class ListManagerTest extends TestCase
     get_empty_lists()
     {
         $dbMock = $this->getMockBuilder(Database::class)
+            ->enableOriginalConstructor()
             ->onlyMethods(['getLists', 'connect'])
             ->getMock();
 
@@ -21,7 +22,7 @@ class ListManagerTest extends TestCase
         $dbMock->expects($this->once())
             ->method('connect');
 
-        $listManager = new ListManager();
+        $listManager = new ListManager($dbMock);
         $lists = $listManager->getLists();
         $this->assertEquals([], $lists);
     }
