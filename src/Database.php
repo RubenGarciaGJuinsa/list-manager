@@ -22,4 +22,9 @@ class Database
     {
         return $this->conn->query('SELECT * FROM list');
     }
+
+    public function setList()
+    {
+
+    }
 }
