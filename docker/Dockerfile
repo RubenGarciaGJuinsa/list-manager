@@ -21,5 +21,8 @@ RUN docker-php-ext-install zip
 
 ###FIN COMPOSER###
 
-CMD composer install \
+RUN apt-get install -y sqlite3
+
+CMD composer update \
+    && cat /var/www/html/docker/migration/000-structure.sql | sqlite3 database.sqlite \
     && apache2-foreground
