@@ -13,10 +13,11 @@ class ListManagerTest extends TestCase
     {
         $dbMock = $this->getMockBuilder(Database::class)
             ->enableOriginalConstructor()
-            ->onlyMethods(['getLists', 'connect'])
+            ->onlyMethods(['select', 'connect'])
             ->getMock();
 
-        $dbMock->method('getLists')
+        $dbMock->method('select')
+            ->with('list')
             ->willReturn([]);
 
         $dbMock->expects($this->once())

@@ -18,15 +18,16 @@ class Database
         $this->conn = new \SQLite3('database.sqlite');
     }
 
-    public function getLists()
+    public function select($table)
     {
-        return $this->conn->query('SELECT * FROM list');
+        return $this->conn->query('SELECT * FROM '.$table);
     }
 
     public function setList($name)
     {
         $stmt = $this->conn->prepare('INSERT INTO list (name) VALUES (:name);');
         $stmt->bindValue(':name', $name, SQLITE3_TEXT);
+
         return $stmt->execute();
     }
 }
