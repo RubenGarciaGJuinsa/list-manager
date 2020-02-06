@@ -46,4 +46,29 @@ class ListManagerTest extends TestCase
         $listManager = new ListManager($dbMock);
         $listManager->createList($listName);
     }
+
+    /** @test */
+    public function
+    create_new_list_with_existing_name_and_get_exception()
+    {
+        $listName = 'ToDo';
+
+        $dbMock = $this->getMockBuilder(Database::class)
+            ->enableOriginalConstructor()
+            ->onlyMethods(['insert', 'select'])
+            ->getMock();
+
+        $dbMock->method('select')
+            ->with('list', ['name' => $listName])
+            ->willReturn([['id' => 1, 'name' => $listName]]);
+
+        $dbMock->expects($this->once())
+            ->method('insert')
+            ->with('list', ['name' => $listName]);
+
+        $this->expectExceptionMessage('Another list is created with the same name');
+
+        $listManager = new ListManager($dbMock);
+        $listManager->createList($listName);
+    }
 }
