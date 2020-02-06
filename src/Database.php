@@ -6,9 +6,7 @@ namespace Kata;
 
 class Database
 {
-    public function __construct()
-    {
-    }
+    protected \SQLite3 $conn;
 
     public function init()
     {
@@ -17,9 +15,11 @@ class Database
 
     protected function connect()
     {
+        $this->conn = new \SQLite3('database.sqlite');
     }
 
     public function getLists()
     {
+        return $this->conn->query('SELECT * FROM list');
     }
 }
