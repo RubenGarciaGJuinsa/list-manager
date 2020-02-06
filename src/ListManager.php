@@ -21,6 +21,6 @@ class ListManager
 
     public function createList($name)
     {
-        return $this->db->setList($name);
+        return $this->db->insert('list', ['name' => $name]);
     }
 }

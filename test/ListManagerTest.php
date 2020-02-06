@@ -36,12 +36,12 @@ class ListManagerTest extends TestCase
 
         $dbMock = $this->getMockBuilder(Database::class)
             ->enableOriginalConstructor()
-            ->onlyMethods(['setList'])
+            ->onlyMethods(['insert'])
             ->getMock();
 
         $dbMock->expects($this->once())
-            ->method('setList')
-            ->with($listName);
+            ->method('insert')
+            ->with('list', ['name' => $listName]);
 
         $listManager = new ListManager($dbMock);
         $listManager->createList($listName);

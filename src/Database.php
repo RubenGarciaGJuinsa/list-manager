@@ -23,10 +23,25 @@ class Database
         return $this->conn->query('SELECT * FROM '.$table);
     }
 
-    public function setList($name)
+    public function insert($table, $fields)
     {
-        $stmt = $this->conn->prepare('INSERT INTO list (name) VALUES (:name);');
-        $stmt->bindValue(':name', $name, SQLITE3_TEXT);
+
+        $fieldNames = '';
+        $fieldValues = '';
+
+        foreach ($fields as $fieldName => $fieldValue) {
+            if ( ! empty($fieldNames)) {
+                $fieldNames .= ', ';
+                $fieldValues .= ', ';
+            }
+            $fieldNames .= $fieldName;
+            $fieldValues .= ':'.$fieldName;
+        }
+        $sql = "INSERT INTO $table ($fieldNames) VALUES ($fieldValues)";
+        $stmt = $this->conn->prepare($sql);
+        foreach ($fields as $fieldName => $fieldValue) {
+            $stmt->bindValue(':'.$fieldName, $fieldValue, SQLITE3_TEXT);
+        }
 
         return $stmt->execute();
     }
