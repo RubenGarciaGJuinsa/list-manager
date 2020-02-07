@@ -66,6 +66,9 @@ class ListManagerTest extends TestCase
             ->with('list', ['name' => $listName])
             ->willReturn([['id' => 1, 'name' => $listName]]);
 
+        $dbMock->expects($this->never())
+            ->method('insert');
+
         $this->expectExceptionMessage('Another list is created with the same name');
 
         $listManager = new ListManager($dbMock);
