@@ -18,9 +18,9 @@ class Database
         $this->conn = new \SQLite3('database.sqlite');
     }
 
-    public function select($table)
+    public function select($table, $conditions = [])
     {
-        return $this->conn->query('SELECT * FROM '.$table);
+        return $this->conn->query('SELECT * FROM '.$table)->fetchArray();
     }
 
     public function insert($table, $fields)

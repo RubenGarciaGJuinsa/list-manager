@@ -36,8 +36,12 @@ class ListManagerTest extends TestCase
 
         $dbMock = $this->getMockBuilder(Database::class)
             ->enableOriginalConstructor()
-            ->onlyMethods(['insert'])
+            ->onlyMethods(['insert', 'select'])
             ->getMock();
+
+        $dbMock->method('select')
+            ->with('list')
+            ->willReturn([]);
 
         $dbMock->expects($this->once())
             ->method('insert')
@@ -61,10 +65,6 @@ class ListManagerTest extends TestCase
         $dbMock->method('select')
             ->with('list', ['name' => $listName])
             ->willReturn([['id' => 1, 'name' => $listName]]);
-
-        $dbMock->expects($this->once())
-            ->method('insert')
-            ->with('list', ['name' => $listName]);
 
         $this->expectExceptionMessage('Another list is created with the same name');
 
