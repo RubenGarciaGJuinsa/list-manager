@@ -26,4 +26,8 @@ class ListManager
         }
         return $this->db->insert('list', ['name' => $name]);
     }
+
+    public function getTasksFromList(int $listId)
+    {
+    }
 }

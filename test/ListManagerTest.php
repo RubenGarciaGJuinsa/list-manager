@@ -71,5 +71,17 @@ class ListManagerTest extends TestCase
         $listManager->createList($listName);
     }
 
+    /** @test */
+    public function
+    get_empty_tasks_from_list()
+    {
+        $this->dbMock->method('select')
+            ->with('task', ['list_id' => 1])
+            ->willReturn([]);
 
+        $listManager = new ListManager($this->dbMock);
+        $tasks = $listManager->getTasksFromList(1);
+
+        $this->assertEquals([], $tasks);
+    }
 }
