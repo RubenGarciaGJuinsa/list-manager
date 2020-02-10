@@ -7,3 +7,6 @@
 
 .phpunit.result.cache
 database.sqlite
+test_database.sqlite
+
+/.env
