@@ -10,3 +10,4 @@ database.sqlite
 test_database.sqlite
 
 /.env
+composer.lock
