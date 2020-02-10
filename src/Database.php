@@ -15,7 +15,7 @@ class Database
 
     protected function connect()
     {
-        $this->conn = new \SQLite3('database.sqlite');
+        $this->conn = new \SQLite3(getenv('DB_CONNECTION'));
     }
 
     public function select($table, $conditions = [])
@@ -41,7 +41,13 @@ class Database
             }
         }
 
-        return $stmt->execute()->fetchArray();
+        $result = $stmt->execute();
+        $resultArray = [];
+        while ($row = $result->fetchArray(SQLITE3_ASSOC)) {
+            $resultArray[] = $row;
+        }
+
+        return $resultArray;
     }
 
     public function insert($table, $fields)
