@@ -3,27 +3,33 @@ namespace Test;
 
 use Kata\Database;
 use Kata\ListManager;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
 class ListManagerTest extends TestCase
 {
+    protected MockObject $dbMock;
+
+    public function setUp(): void
+    {
+        $this->dbMock = $this->getMockBuilder(Database::class)
+            ->enableOriginalConstructor()
+            ->onlyMethods(['select', 'connect', 'insert'])
+            ->getMock();
+    }
+
     /** @test */
     public function
     get_empty_lists()
     {
-        $dbMock = $this->getMockBuilder(Database::class)
-            ->enableOriginalConstructor()
-            ->onlyMethods(['select', 'connect'])
-            ->getMock();
-
-        $dbMock->method('select')
+        $this->dbMock->method('select')
             ->with('list')
             ->willReturn([]);
 
-        $dbMock->expects($this->once())
+        $this->dbMock->expects($this->once())
             ->method('connect');
 
-        $listManager = new ListManager($dbMock);
+        $listManager = new ListManager($this->dbMock);
         $lists = $listManager->getLists();
         $this->assertEquals([], $lists);
     }
@@ -34,20 +40,15 @@ class ListManagerTest extends TestCase
     {
         $listName = 'ToDo';
 
-        $dbMock = $this->getMockBuilder(Database::class)
-            ->enableOriginalConstructor()
-            ->onlyMethods(['insert', 'select'])
-            ->getMock();
-
-        $dbMock->method('select')
+        $this->dbMock->method('select')
             ->with('list')
             ->willReturn([]);
 
-        $dbMock->expects($this->once())
+        $this->dbMock->expects($this->once())
             ->method('insert')
             ->with('list', ['name' => $listName]);
 
-        $listManager = new ListManager($dbMock);
+        $listManager = new ListManager($this->dbMock);
         $listManager->createList($listName);
     }
 
@@ -57,21 +58,18 @@ class ListManagerTest extends TestCase
     {
         $listName = 'ToDo';
 
-        $dbMock = $this->getMockBuilder(Database::class)
-            ->enableOriginalConstructor()
-            ->onlyMethods(['insert', 'select'])
-            ->getMock();
-
-        $dbMock->method('select')
+        $this->dbMock->method('select')
             ->with('list', ['name' => $listName])
             ->willReturn([['id' => 1, 'name' => $listName]]);
 
-        $dbMock->expects($this->never())
+        $this->dbMock->expects($this->never())
             ->method('insert');
 
         $this->expectExceptionMessage('Another list is created with the same name');
 
-        $listManager = new ListManager($dbMock);
+        $listManager = new ListManager($this->dbMock);
         $listManager->createList($listName);
     }
+
+
 }
