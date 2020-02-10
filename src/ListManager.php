@@ -29,5 +29,6 @@ class ListManager
 
     public function getTasksFromList(int $listId)
     {
+        return $this->db->select('task', ['list_id' => $listId]);
     }
 }
