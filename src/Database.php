@@ -20,7 +20,28 @@ class Database
 
     public function select($table, $conditions = [])
     {
-        return $this->conn->query('SELECT * FROM '.$table)->fetchArray();
+        $sql = 'SELECT * FROM '.$table;
+        if ( ! empty($conditions)) {
+            $sqlWhere = '';
+
+            foreach ($conditions as $field => $value) {
+                if (!empty($sqlWhere)) {
+                    $sqlWhere .= ' AND ';
+                }
+                $sqlWhere .= $field.'=:'.$field;
+            }
+            $sql .= ' WHERE '.$sqlWhere;
+        }
+
+        $stmt = $this->conn->prepare($sql);
+
+        if ( ! empty($conditions)) {
+            foreach ($conditions as $field => $value) {
+                $stmt->bindValue(':'.$field, $value, SQLITE3_TEXT);
+            }
+        }
+
+        return $stmt->execute()->fetchArray();
     }
 
     public function insert($table, $fields)
