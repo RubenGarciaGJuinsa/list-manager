@@ -34,6 +34,9 @@ class ListManager
 
     public function createNewTask(string $taskName, int $listId)
     {
+        if (!empty($this->db->select('task', ['name' => $taskName, 'list_id' => $listId]))) {
+            throw new \Exception('Another task is created with the same name in the same list');
+        }
         return $this->db->insert('task', ['name' => $taskName, 'list_id' => $listId]);
     }
 }

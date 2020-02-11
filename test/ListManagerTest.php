@@ -91,8 +91,13 @@ class ListManagerTest extends TestCase
     {
         $taskName = 'taskName';
         $this->dbMock->method('select')
-            ->withConsecutive(['task', ['list_id' => 1]], ['task', ['list_id' => 1]])
+            ->withConsecutive(
+                ['task', ['list_id' => 1]],
+                ['task', ['list_id' => 1, 'name' => $taskName]],
+                ['task', ['list_id' => 1]]
+            )
             ->willReturnOnConsecutiveCalls(
+                [],
                 [],
                 [['id' => 1, 'list_id' => 1, 'name' => $taskName]]
             );
@@ -117,7 +122,7 @@ class ListManagerTest extends TestCase
     {
         $taskName = 'taskName';
         $this->dbMock->method('select')
-            ->withConsecutive(['task', ['list_id' => 1]])
+            ->with('task', ['name' => $taskName, 'list_id' => 1])
             ->willReturn(
                 [
                     ['id' => 1, 'list_id' => 1, 'name' => $taskName]
@@ -125,7 +130,7 @@ class ListManagerTest extends TestCase
             );
 
         $this->dbMock->expects($this->once())
-            ->method('insert')
+            ->method('select')
             ->with('task', ['name' => $taskName, 'list_id' => 1]);
 
         $this->dbMock->expects($this->never())
