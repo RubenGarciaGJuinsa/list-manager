@@ -34,6 +34,6 @@ class ListManager
 
     public function createNewTask(string $taskName, int $listId)
     {
-
+        return $this->db->insert('task', ['name' => $taskName, 'list_id' => $listId]);
     }
 }

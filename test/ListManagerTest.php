@@ -94,7 +94,7 @@ class ListManagerTest extends TestCase
             ->withConsecutive(['task', ['list_id' => 1]], ['task', ['list_id' => 1]])
             ->willReturnOnConsecutiveCalls(
                 [],
-                ['id' => 1, 'list_id' => 1, 'name' => $taskName]
+                [['id' => 1, 'list_id' => 1, 'name' => $taskName]]
             );
 
         $this->dbMock->expects($this->once())
@@ -108,6 +108,6 @@ class ListManagerTest extends TestCase
         $listManager->createNewTask($taskName, 1);
 
         $tasks = $listManager->getTasksFromList(1);
-        $this->assertEquals(['id' => 1, 'list_id' => 1, 'name' => $taskName], $tasks);
+        $this->assertEquals([['id' => 1, 'list_id' => 1, 'name' => $taskName]], $tasks);
     }
 }
