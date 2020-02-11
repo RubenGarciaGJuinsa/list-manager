@@ -84,4 +84,30 @@ class ListManagerTest extends TestCase
 
         $this->assertEquals([], $tasks);
     }
+
+    /** @test */
+    public function
+    create_new_task()
+    {
+        $taskName = 'taskName';
+        $this->dbMock->method('select')
+            ->withConsecutive(['task', ['list_id' => 1]], ['task', ['list_id' => 1]])
+            ->willReturnOnConsecutiveCalls(
+                [],
+                ['id' => 1, 'list_id' => 1, 'name' => $taskName]
+            );
+
+        $this->dbMock->expects($this->once())
+            ->method('insert')
+            ->with('task', ['name' => $taskName, 'list_id' => 1]);
+
+        $listManager = new ListManager($this->dbMock);
+        $tasks = $listManager->getTasksFromList(1);
+        $this->assertEquals([], $tasks);
+
+        $listManager->createNewTask($taskName, 1);
+
+        $tasks = $listManager->getTasksFromList(1);
+        $this->assertEquals(['id' => 1, 'list_id' => 1, 'name' => $taskName], $tasks);
+    }
 }

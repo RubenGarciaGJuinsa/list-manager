@@ -31,4 +31,9 @@ class ListManager
     {
         return $this->db->select('task', ['list_id' => $listId]);
     }
+
+    public function createNewTask(string $taskName, int $listId)
+    {
+
+    }
 }
