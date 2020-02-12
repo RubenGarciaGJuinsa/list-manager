@@ -27,4 +27,9 @@ class TaskManager
 
         return $this->db->insert('task', ['name' => $taskName, 'list_id' => $listId]);
     }
+
+    public function editTask(int $int, string $taskName, int $taskList)
+    {
+
+    }
 }

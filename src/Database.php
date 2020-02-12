@@ -74,4 +74,9 @@ class Database
 
         return $stmt->execute();
     }
+
+    public function update($table, $fields)
+    {
+
+    }
 }

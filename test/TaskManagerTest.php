@@ -17,7 +17,7 @@ class TaskManagerTest extends TestCase
     {
         $this->dbMock = $this->getMockBuilder(Database::class)
             ->enableOriginalConstructor()
-            ->onlyMethods(['select', 'connect', 'insert'])
+            ->onlyMethods(['select', 'connect', 'insert', 'update'])
             ->getMock();
     }
 
@@ -90,5 +90,29 @@ class TaskManagerTest extends TestCase
 
         $taskManager = new TaskManager($this->dbMock);
         $taskManager->createNewTask($taskName, 1);
+    }
+
+    /** @test */
+    public function
+    edit_existing_task()
+    {
+        $taskName = 'taskName';
+        $taskList = 2;
+
+        $this->dbMock->method('select')
+            ->with('task', ['list_id' => 2])
+            ->willReturn(
+                [['id' => 1, 'list_id' => 2, 'name' => $taskName]]
+            );
+
+        $this->dbMock->expects($this->once())
+            ->method('update')
+            ->with('task', ['id' => 1, 'name' => $taskName, 'list_id' => $taskList]);
+
+        $taskManager = new TaskManager($this->dbMock);
+        $taskManager->editTask(1, $taskName, $taskList);
+
+        $tasks = $taskManager->getTasksFromList($taskList);
+        $this->assertEquals([['id' => 1, 'list_id' => $taskList, 'name' => $taskName]], $tasks);
     }
 }
