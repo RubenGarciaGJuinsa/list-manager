@@ -28,8 +28,8 @@ class TaskManager
         return $this->db->insert('task', ['name' => $taskName, 'list_id' => $listId]);
     }
 
-    public function editTask(int $int, string $taskName, int $taskList)
+    public function editTask(int $taskId, string $taskName, int $taskList)
     {
-
+        return $this->db->update('task', ['name' => $taskName, 'list_id' => $taskList], ['id' => $taskId]);
     }
 }

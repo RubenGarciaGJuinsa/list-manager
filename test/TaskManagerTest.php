@@ -107,7 +107,7 @@ class TaskManagerTest extends TestCase
 
         $this->dbMock->expects($this->once())
             ->method('update')
-            ->with('task', ['id' => 1, 'name' => $taskName, 'list_id' => $taskList]);
+            ->with('task', ['name' => $taskName, 'list_id' => $taskList], ['id' => 1]);
 
         $taskManager = new TaskManager($this->dbMock);
         $taskManager->editTask(1, $taskName, $taskList);
