@@ -27,7 +27,7 @@ class Database
             $sqlWhere = '';
 
             foreach ($conditions as $field => $value) {
-                if (!empty($sqlWhere)) {
+                if ( ! empty($sqlWhere)) {
                     $sqlWhere .= ' AND ';
                 }
                 $sqlWhere .= $field.'=:'.$field;
@@ -77,6 +77,38 @@ class Database
 
     public function update($table, $fields, $conditions = [])
     {
+        $sql = "UPDATE $table SET ";
 
+        $fieldNumber = 0;
+        foreach ($fields as $fieldName => $fieldValue) {
+            if ($fieldNumber > 0) {
+                $sql .= ", ";
+            }
+
+            $sql .= "$fieldName = :u$fieldName";
+            $fieldNumber++;
+        }
+
+        if ( ! empty($conditions)) {
+            $sqlWhere = '';
+
+            foreach ($conditions as $field => $value) {
+                if ( ! empty($sqlWhere)) {
+                    $sqlWhere .= ' AND ';
+                }
+                $sqlWhere .= $field.'=:w'.$field;
+            }
+            $sql .= " WHERE $sqlWhere";
+        }
+
+        $stmt = $this->conn->prepare($sql);
+        foreach ($fields as $fieldName => $fieldValue) {
+            $stmt->bindValue(':u'.$fieldName, $fieldValue, SQLITE3_TEXT);
+        }
+        foreach ($conditions as $fieldName => $fieldValue) {
+            $stmt->bindValue(':w'.$fieldName, $fieldValue, SQLITE3_TEXT);
+        }
+
+        return $stmt->execute();
     }
 }
