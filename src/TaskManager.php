@@ -37,8 +37,8 @@ class TaskManager
         return $this->db->update('task', ['name' => $taskName, 'list_id' => $taskList], ['id' => $taskId]);
     }
 
-    public function deleteTask(int $taskId, int $taskList)
+    public function deleteTask(int $taskId)
     {
-
+        return $this->db->delete('task', ['id' => $taskId]);
     }
 }

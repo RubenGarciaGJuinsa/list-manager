@@ -148,13 +148,12 @@ class TaskManagerTest extends TestCase
     delete_existing_task()
     {
         $taskId = 1;
-        $taskList = 1;
 
         $this->dbMock->expects($this->once())
             ->method('delete')
             ->with('task', ['id' => $taskId]);
 
         $taskManager = new TaskManager($this->dbMock);
-        $taskManager->deleteTask($taskId, $taskList);
+        $taskManager->deleteTask($taskId);
     }
 }
