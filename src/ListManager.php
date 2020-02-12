@@ -29,7 +29,7 @@ class ListManager
 
     public function getTasksFromList(int $listId)
     {
-        return $this->db->select('task', ['list_id' => $listId]);
+        return (new TaskManager($this->db))->getTasksFromList($listId);
     }
 
     public function createNewTask(string $taskName, int $listId)

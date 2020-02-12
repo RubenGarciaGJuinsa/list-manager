@@ -15,7 +15,9 @@ class Database
 
     protected function connect()
     {
-        $this->conn = new \SQLite3(getenv('DB_CONNECTION'));
+        if (empty($this->conn)) {
+            $this->conn = new \SQLite3(getenv('DB_CONNECTION'));
+        }
     }
 
     public function select($table, $conditions = [])
