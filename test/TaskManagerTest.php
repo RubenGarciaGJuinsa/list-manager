@@ -65,4 +65,30 @@ class TaskManagerTest extends TestCase
         $tasks = $taskManager->getTasksFromList(1);
         $this->assertEquals([['id' => 1, 'list_id' => 1, 'name' => $taskName]], $tasks);
     }
+
+    /** @test */
+    public function
+    create_new_task_with_existing_name_expects_exception()
+    {
+        $taskName = 'taskName';
+        $this->dbMock->method('select')
+            ->with('task', ['name' => $taskName, 'list_id' => 1])
+            ->willReturn(
+                [
+                    ['id' => 1, 'list_id' => 1, 'name' => $taskName],
+                ]
+            );
+
+        $this->dbMock->expects($this->once())
+            ->method('select')
+            ->with('task', ['name' => $taskName, 'list_id' => 1]);
+
+        $this->dbMock->expects($this->never())
+            ->method('insert');
+
+        $this->expectExceptionMessage('Another task is created with the same name in the same list');
+
+        $taskManager = new TaskManager($this->dbMock);
+        $taskManager->createNewTask($taskName, 1);
+    }
 }
