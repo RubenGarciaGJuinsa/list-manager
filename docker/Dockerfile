@@ -35,6 +35,8 @@ RUN useradd -u 1000 docker \
 USER 1000:1000
 ###FIN USER PERMISSION###
 
+RUN sudo a2enmod rewrite
+
 CMD composer update \
     && cat /var/www/html/docker/migration/000-structure.sql | sqlite3 database.sqlite \
     && sudo apache2-foreground

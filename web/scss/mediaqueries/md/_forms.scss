@@ -1,0 +1,11 @@
+.form {
+  align-items: flex-end;
+
+  &__label {
+    width: 30%;
+  }
+
+  &__input {
+    width: 70%;
+  }
+}

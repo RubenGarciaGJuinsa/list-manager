@@ -1,0 +1,23 @@
+.form {
+  display: flex;
+  flex-direction: column;
+
+  &__row {
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    margin-bottom: 40px;
+  }
+
+  &__label {
+    width: 100%;
+  }
+
+  &__input {
+    width: 100%;
+
+    &--textarea {
+      min-height: 200px;
+    }
+  }
+}

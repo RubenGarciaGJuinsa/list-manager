@@ -1,0 +1,2 @@
+Site/Index view
+<?= $mensaje ?>
