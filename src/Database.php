@@ -111,4 +111,9 @@ class Database
 
         return $stmt->execute();
     }
+
+    public function delete($table, $conditions = [])
+    {
+
+    }
 }

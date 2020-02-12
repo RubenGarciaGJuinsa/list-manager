@@ -17,7 +17,7 @@ class TaskManagerTest extends TestCase
     {
         $this->dbMock = $this->getMockBuilder(Database::class)
             ->enableOriginalConstructor()
-            ->onlyMethods(['select', 'connect', 'insert', 'update'])
+            ->onlyMethods(['select', 'connect', 'insert', 'update', 'delete'])
             ->getMock();
     }
 
@@ -141,5 +141,20 @@ class TaskManagerTest extends TestCase
 
         $taskManager = new TaskManager($this->dbMock);
         $taskManager->editTask(1, $taskName, $taskList);
+    }
+
+    /** @test */
+    public function
+    delete_existing_task()
+    {
+        $taskId = 1;
+        $taskList = 1;
+
+        $this->dbMock->expects($this->once())
+            ->method('delete')
+            ->with('task', ['id' => $taskId]);
+
+        $taskManager = new TaskManager($this->dbMock);
+        $taskManager->deleteTask($taskId, $taskList);
     }
 }
