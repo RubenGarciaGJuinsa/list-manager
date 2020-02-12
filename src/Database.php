@@ -4,25 +4,40 @@
 namespace Kata;
 
 
-class Database
-{
-    protected \SQLite3 $conn;
+use Almacen\core\Db\DbApplicationInterface;
+use Almacen\Core\Db\DbInterface;
 
-    public function init()
+class Database implements DbInterface, DbApplicationInterface
+{
+    private static $instance;
+
+    protected \SQLite3 $conn;
+    protected $dbName;
+
+    protected function __construct(array $config)
     {
+        $this->dbName = $config['dbName'];
+
         $this->connect();
+    }
+
+    public static function init(array $config): DbInterface
+    {
+        static::$instance = new static($config);
+
+        return static::$instance;
     }
 
     protected function connect()
     {
         if (empty($this->conn)) {
-            $this->conn = new \SQLite3(getenv('DB_CONNECTION'));
+            $this->conn = new \SQLite3($this->dbName);
         }
     }
 
-    public function select($table, $conditions = [])
+    public function select(string $table, array $fields, array $conditions = []): array
     {
-        $sql = 'SELECT * FROM '.$table;
+        $sql = 'SELECT '.implode(', ', $fields).' FROM '.$table;
         if ( ! empty($conditions)) {
             $sqlWhere = '';
 
@@ -52,9 +67,8 @@ class Database
         return $resultArray;
     }
 
-    public function insert($table, $fields)
+    public function insert($table, $fields): ?int
     {
-
         $fieldNames = '';
         $fieldValues = '';
 
@@ -72,7 +86,7 @@ class Database
             $stmt->bindValue(':'.$fieldName, $fieldValue, SQLITE3_TEXT);
         }
 
-        return $stmt->execute();
+        return $stmt->execute()->numColumns();
     }
 
     public function update($table, $fields, $conditions = [])
