@@ -30,6 +30,10 @@ class TaskManager
 
     public function editTask(int $taskId, string $taskName, int $taskList)
     {
+        if ( ! empty($this->db->select('task', ['name' => $taskName, 'list_id' => $taskList]))) {
+            throw new \Exception('Another task is created with the same name in the same list');
+        }
+
         return $this->db->update('task', ['name' => $taskName, 'list_id' => $taskList], ['id' => $taskId]);
     }
 }
