@@ -33,7 +33,7 @@ if ( ! empty($tasks)) {
                 <td><?= $lists[$task['list_id']] ?></td>
                 <td>
                     <a href="/task/view/<?= $task['id'] ?>"><i class="fa fa-eye"></i></a>
-                    <i class="fa fa-pencil-alt"></i>
+                    <a href="/task/update/<?= $task['id'] ?>"><i class="fa fa-pencil-alt"></i></a>
                     <i class="fa fa-trash-alt"></i>
                 </td>
             </tr>

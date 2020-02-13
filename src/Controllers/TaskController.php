@@ -80,4 +80,36 @@ class TaskController extends BaseController
 
         return $listsByName;
     }
+
+    public function actionUpdate($id = '')
+    {
+        if (empty($id)) {
+            header('Location: /task/index');
+        }
+
+        $formData = Request::getPostParam('task', null);
+        if ( ! empty($formData)) {
+            try {
+                if ($this->taskManager->editTask($id, $formData['name'], $formData['list_id'])) {
+                    Alert::getInstance()->add(Application::t('Article', 'Tarea editada correctamente!'), 'success');
+                    header("Location: /task/view/".$id);
+
+                    return '';
+                } else {
+                    throw new \Exception(Application::t('Article', 'Error cuando se estaba editando la tarea!'));
+                }
+            } catch (\Exception $e) {
+                Alert::getInstance()->add($e->getMessage(),'danger');
+            }
+        }
+
+        $task = $this->taskManager->getTask($id);
+        $this->title = 'Edit Task: ' . $task['name'];
+
+        $lists = (new ListManager(Db::getInstance()))->getLists();
+
+
+
+        return $this->render('form', ['task' => $task, 'lists' => $lists]);
+    }
 }

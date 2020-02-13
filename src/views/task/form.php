@@ -11,6 +11,7 @@ use Almacen\Core\Application;
         <div class="form__row">
             <label class="form__label" for="nameField"><?= Application::t('form-task', 'Nombre') ?></label>
             <input type="text" class="form__input form-control" id="nameField" name="task[name]"
+                   value="<?= ! empty($task['name']) ? $task['name'] : '' ?>"
                    placeholder="<?= Application::t('form-task', 'Introducir nombre...') ?>">
         </div>
         <div class="form__row">
@@ -20,7 +21,9 @@ use Almacen\Core\Application;
                 <?php
                 foreach ($lists as $list) {
                     ?>
-                    <option value="<?= $list['id'] ?>"><?= $list['name'] ?></option><?php
+                    <option value="<?= $list['id'] ?>"
+                    <?= ( ! empty($task['list_id']) && $task['list_id'] == $list['id']) ? 'selected="selected"' : '' ?>
+                    ><?= $list['name'] ?></option><?php
                 }
                 ?>
             </select>

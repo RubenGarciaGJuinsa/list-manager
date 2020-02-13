@@ -10,7 +10,8 @@ $fields['Nombre'] = $task['name'];
 $fields['List'] = $lists[$task['list_id']];
 
 ?>
-<div>
+<a class="btn btn-success float-right mb-4" href="/task/update/<?=$fields['ID']?>">Edit task</a>
+<div class="float-left col-12">
     <?php
     foreach ($fields as $name => $value) {
         ?>
