@@ -22,9 +22,11 @@ class TaskController extends BaseController
 
     public function actionIndex()
     {
-        $tasks = $this->taskManager->getTasksFromList(1);
+        $tasks = $this->taskManager->getAllTasks();
 
-        return $this->render('index', ['tasks'=>$tasks]);
+        $lists = $this->getListsNamesById();
+
+        return $this->render('index', ['tasks'=>$tasks, 'lists' => $lists]);
     }
 
     public function actionCreate()
@@ -34,9 +36,9 @@ class TaskController extends BaseController
         $formData = Request::getPostParam('task', null);
         if ( ! empty($formData)) {
             try {
-                if ($this->taskManager->createNewTask($formData['name'], $formData['list_id'])) {
+                if ($insertId = $this->taskManager->createNewTask($formData['name'], $formData['list_id'])) {
                     Alert::getInstance()->add(Application::t('Article', 'Tarea creada correctamente!'), 'success');
-                    header("Refresh:0");
+                    header("Location: /task/view/".$insertId);
 
                     return '';
                 } else {
@@ -50,5 +52,32 @@ class TaskController extends BaseController
         $lists = (new ListManager(Db::getInstance()))->getLists();
 
         return $this->render('form', ['lists' => $lists]);
+    }
+
+    public function actionView($id = '')
+    {
+        if (empty($id)) {
+            header('Location: /task/index');
+        }
+
+        $listsByName = $this->getListsNamesById();
+
+        $task = $this->taskManager->getTask($id);
+
+        return $this->render('view', ['task' => $task, 'lists' => $listsByName]);
+    }
+
+    /**
+     * @return array
+     */
+    protected function getListsNamesById(): array
+    {
+        $lists = (new ListManager(Db::getInstance()))->getLists();
+        $listsByName = [];
+        foreach ($lists as $list) {
+            $listsByName[$list['id']] = $list['name'];
+        }
+
+        return $listsByName;
     }
 }

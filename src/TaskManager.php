@@ -14,6 +14,11 @@ class TaskManager
         $this->db = $db;
     }
 
+    public function getAllTasks()
+    {
+        return $this->db->select('task', ['id', 'list_id', 'name']);
+    }
+
     public function getTasksFromList(int $listId)
     {
         return $this->db->select('task', ['id', 'list_id', 'name'], ['list_id' => $listId]);
@@ -44,6 +49,7 @@ class TaskManager
 
     public function getTask(string $id)
     {
-        return $this->db->select('task', ['id', 'list_id', 'name'], ['id' => $id]);
+        $tasks = $this->db->select('task', ['id', 'list_id', 'name'], ['id' => $id]);
+        return array_shift($tasks);
     }
 }

@@ -1,4 +1,8 @@
 <?php
+/**
+ * @var array $tasks
+ * @var array $lists
+ */
 ?>
 <a class="btn btn-success float-right mb-4" href="/task/create">Create task</a>
 <?php
@@ -14,7 +18,7 @@ if ( ! empty($tasks)) {
                 Nombre
             </th>
             <th>
-                List id
+                List
             </th>
             <th></th>
         </tr>
@@ -26,7 +30,7 @@ if ( ! empty($tasks)) {
             <tr>
                 <td><?= $task['id'] ?></td>
                 <td><?= $task['name'] ?></td>
-                <td><?= $task['list_id'] ?></td>
+                <td><?= $lists[$task['list_id']] ?></td>
                 <td>
                     <a href="/task/view/<?= $task['id'] ?>"><i class="fa fa-eye"></i></a>
                     <i class="fa fa-pencil-alt"></i>
