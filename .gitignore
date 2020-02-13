@@ -11,3 +11,5 @@ test_database.sqlite
 
 /.env
 composer.lock
+/web/node_modules/
+/web/css/custom.*
