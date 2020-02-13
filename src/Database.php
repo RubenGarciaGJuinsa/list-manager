@@ -91,7 +91,8 @@ class Database implements DbInterface, DbApplicationInterface
             $stmt->bindValue(':'.$fieldName, $fieldValue, SQLITE3_TEXT);
         }
 
-        return $stmt->execute()->numColumns();
+
+        return (int)$stmt->execute();
     }
 
     public function update($table, $fields, $conditions = [])

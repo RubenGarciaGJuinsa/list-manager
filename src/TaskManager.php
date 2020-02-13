@@ -41,4 +41,9 @@ class TaskManager
     {
         return $this->db->delete('task', ['id' => $taskId]);
     }
+
+    public function getTask(string $id)
+    {
+        return $this->db->select('task', ['id', 'list_id', 'name'], ['id' => $id]);
+    }
 }

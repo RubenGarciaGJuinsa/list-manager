@@ -16,7 +16,7 @@ class ListManager
 
     public function getLists()
     {
-        return $this->db->select('list', ['id', 'name', 'list_id']);
+        return $this->db->select('list', ['id', 'name']);
     }
 
     public function createList($name)
