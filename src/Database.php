@@ -135,7 +135,28 @@ class Database implements DbInterface, DbApplicationInterface
 
     public function delete($table, $conditions = [])
     {
+        $sql = "DELETE FROM $table";
 
+        if (!empty($conditions)) {
+            $sqlWhere = "";
+
+            foreach ($conditions as $field => $value) {
+                if ( ! empty($sqlWhere)) {
+                    $sqlWhere .= ' AND ';
+                }
+                $sqlWhere .= $field.'=:'.$field;
+            }
+            $sql .= " WHERE $sqlWhere";
+        }
+
+        $stmt = static::$conn->prepare($sql);
+        foreach ($conditions as $fieldName => $fieldValue) {
+            $stmt->bindValue(':'.$fieldName, $fieldValue, SQLITE3_TEXT);
+        }
+
+        $stmt->execute();
+
+        return static::$conn->changes();
     }
 
     public static function getInstance(): DbInterface

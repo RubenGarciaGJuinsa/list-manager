@@ -112,4 +112,21 @@ class TaskController extends BaseController
 
         return $this->render('form', ['task' => $task, 'lists' => $lists]);
     }
+
+    public function actionDelete($id = '')
+    {
+        if (empty($id)) {
+            header('Location: /task/index');
+        }
+        try {
+            if ($this->taskManager->deleteTask($id)) {
+                Alert::getInstance()->add(Application::t('Article', 'Tarea borrada correctamente!'), 'success');
+            } else {
+                throw new \Exception(Application::t('Article', 'No se pudo borrar la tarea!'));
+            }
+        } catch (\Exception $e) {
+            Alert::getInstance()->add($e->getMessage(),'danger');
+        }
+        header('Location: /task/index');
+    }
 }
