@@ -10,18 +10,18 @@ class TaskManager
 
     public function __construct($db)
     {
-        $db->init();
+//        $db->init();
         $this->db = $db;
     }
 
     public function getTasksFromList(int $listId)
     {
-        return $this->db->select('task', ['list_id' => $listId]);
+        return $this->db->select('task', ['id', 'list_id', 'name'], ['list_id' => $listId]);
     }
 
     public function createNewTask(string $taskName, int $listId)
     {
-        if ( ! empty($this->db->select('task', ['name' => $taskName, 'list_id' => $listId]))) {
+        if ( ! empty($this->db->select('task', ['id'], ['name' => $taskName, 'list_id' => $listId]))) {
             throw new \Exception('Another task is created with the same name in the same list');
         }
 
@@ -30,7 +30,7 @@ class TaskManager
 
     public function editTask(int $taskId, string $taskName, int $taskList)
     {
-        if ( ! empty($this->db->select('task', ['name' => $taskName, 'list_id' => $taskList]))) {
+        if ( ! empty($this->db->select('task', ['id'], ['name' => $taskName, 'list_id' => $taskList]))) {
             throw new \Exception('Another task is created with the same name in the same list');
         }
 

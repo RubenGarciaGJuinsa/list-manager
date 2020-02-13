@@ -34,9 +34,6 @@ class ListManagerTest extends TestCase
             ->with('list')
             ->willReturn([]);
 
-        $this->dbMock->expects($this->once())
-            ->method('connect');
-
         $listManager = new ListManager($this->dbMock);
         $lists = $listManager->getLists();
         $this->assertEquals([], $lists);

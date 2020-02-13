@@ -5,7 +5,7 @@ namespace Kata;
 
 
 use Almacen\Core\Application;
-use Almacen\core\Db\DbApplicationInterface;
+use Almacen\Core\Db\DbApplicationInterface;
 use Almacen\Core\Db\DbInterface;
 
 class Database implements DbInterface, DbApplicationInterface
