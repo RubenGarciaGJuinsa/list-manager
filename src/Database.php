@@ -4,6 +4,7 @@
 namespace Kata;
 
 
+use Almacen\Core\Application;
 use Almacen\core\Db\DbApplicationInterface;
 use Almacen\Core\Db\DbInterface;
 
@@ -11,27 +12,31 @@ class Database implements DbInterface, DbApplicationInterface
 {
     private static $instance;
 
-    protected \SQLite3 $conn;
-    protected $dbName;
+    protected static \SQLite3 $conn;
+    protected $dbFile;
 
-    protected function __construct(array $config)
+    public function __construct()
     {
-        $this->dbName = $config['dbName'];
 
-        $this->connect();
     }
 
     public static function init(array $config): DbInterface
     {
-        static::$instance = new static($config);
+        if (empty(static::$instance)) {
+            $instance = new static();
+            $instance->dbFile = $config['dbFile'];
+
+            $instance->connect();
+            static::$instance = $instance;
+        }
 
         return static::$instance;
     }
 
     protected function connect()
     {
-        if (empty($this->conn)) {
-            $this->conn = new \SQLite3($this->dbName);
+        if (empty(static::$conn)) {
+            static::$conn = new \SQLite3($this->dbFile);
         }
     }
 
@@ -50,7 +55,7 @@ class Database implements DbInterface, DbApplicationInterface
             $sql .= ' WHERE '.$sqlWhere;
         }
 
-        $stmt = $this->conn->prepare($sql);
+        $stmt = static::$conn->prepare($sql);
 
         if ( ! empty($conditions)) {
             foreach ($conditions as $field => $value) {
@@ -81,7 +86,7 @@ class Database implements DbInterface, DbApplicationInterface
             $fieldValues .= ':'.$fieldName;
         }
         $sql = "INSERT INTO $table ($fieldNames) VALUES ($fieldValues)";
-        $stmt = $this->conn->prepare($sql);
+        $stmt = static::$conn->prepare($sql);
         foreach ($fields as $fieldName => $fieldValue) {
             $stmt->bindValue(':'.$fieldName, $fieldValue, SQLITE3_TEXT);
         }
@@ -115,7 +120,7 @@ class Database implements DbInterface, DbApplicationInterface
             $sql .= " WHERE $sqlWhere";
         }
 
-        $stmt = $this->conn->prepare($sql);
+        $stmt = static::$conn->prepare($sql);
         foreach ($fields as $fieldName => $fieldValue) {
             $stmt->bindValue(':u'.$fieldName, $fieldValue, SQLITE3_TEXT);
         }
@@ -129,5 +134,14 @@ class Database implements DbInterface, DbApplicationInterface
     public function delete($table, $conditions = [])
     {
 
+    }
+
+    public static function getInstance(): DbInterface
+    {
+        if (empty(static::$instance)) {
+            Application::getInstance()->initDb();
+        }
+
+        return static::$instance;
     }
 }

@@ -1,6 +1,7 @@
 <?php
 namespace Test;
 
+use Almacen\Core\Application;
 use Kata\Database;
 use Kata\ListManager;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -12,6 +13,13 @@ class ListManagerTest extends TestCase
 
     public function setUp(): void
     {
+        $configFiles = [
+            __DIR__.'/Core/Application/config/main_sqlite.php',
+        ];
+        Application::delete();
+        Application::getInstance($configFiles);
+        Database::getInstance();
+
         $this->dbMock = $this->getMockBuilder(Database::class)
             ->enableOriginalConstructor()
             ->onlyMethods(['select', 'connect', 'insert'])

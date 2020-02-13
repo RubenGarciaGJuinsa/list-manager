@@ -10,7 +10,7 @@ class ListManager
 
     public function __construct($db)
     {
-        $db->init();
+//        $db->init();
         $this->db = $db;
     }
 
