@@ -1,6 +1,8 @@
 <?php
 
 use Behat\Behat\Context\Context;
+use Behat\Behat\Hook\Scope\AfterStepScope;
+use Behat\Mink\Driver\Selenium2Driver;
 use Behat\MinkExtension\Context\RawMinkContext;
 
 /**
@@ -9,14 +11,13 @@ use Behat\MinkExtension\Context\RawMinkContext;
 class FeatureContext extends RawMinkContext implements Context
 {
     /**
-     * Initializes context.
-     *
-     * Every scenario gets its own context instance.
-     * You can also pass arbitrary arguments to the
-     * context constructor through behat.yml.
+     * @AfterStep
      */
-    public function __construct()
+    public function takeScreenShotAfterFailedStep(AfterStepScope $scope)
     {
+        if ($scope->getTestResult()->getResultCode() === 99) {
+            $this->takeScreenShot('test_failed_');
+        }
     }
 
     /**
@@ -29,9 +30,28 @@ class FeatureContext extends RawMinkContext implements Context
             throw new Exception('Page title element was not found!');
         } else {
             $title = $titleElement->getText();
-            if (!(bool) preg_match($pattern, $title)) {
+            if ( ! (bool)preg_match($pattern, $title)) {
                 throw new Exception("Incorrect title! Expected:$pattern | Actual:$title ");
             }
+        }
+    }
+
+    protected function driverSupportsJavascript()
+    {
+        $driver = $this->getSession()->getDriver();
+
+        return ($driver instanceof Selenium2Driver);
+    }
+
+    public function takeScreenShot(string $filename = null)
+    {
+        if (empty($filename)) {
+            $filename = 'test_';
+        }
+        $filename .= date('dmyHis');
+
+        if ($this->driverSupportsJavascript()) {
+            $this->saveScreenshot($filename.'.png', realpath(__DIR__.'/../../screenshots'));
         }
     }
 }

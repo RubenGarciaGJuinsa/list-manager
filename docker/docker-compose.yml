@@ -9,3 +9,41 @@ services:
             - ../:/var/www/html/
         env_file:
             - variables.env
+        links:
+          - selenium-chrome:selenium-chrome
+          - selenium-firefox:selenium-firefox
+          - selenium-hub:selenium-hub
+        networks:
+            default:
+                aliases:
+                    - localserver
+
+    selenium-hub:
+        image: selenium/hub:3.141.59-zinc
+        container_name: selenium-hub
+        ports:
+            - "4444:4444"
+
+    selenium-chrome:
+        build:
+            context: Dockerfiles/selenium-chrome
+        volumes:
+            - /dev/shm:/dev/shm
+        depends_on:
+            - selenium-hub
+        environment:
+            - HUB_HOST=selenium-hub
+            - HUB_PORT=4444
+
+    selenium-firefox:
+        image: selenium/node-firefox:3.141.59-zinc
+        volumes:
+            - /dev/shm:/dev/shm
+        depends_on:
+            - selenium-hub
+        environment:
+            - HUB_HOST=selenium-hub
+            - HUB_PORT=4444
+
+networks:
+  default:
