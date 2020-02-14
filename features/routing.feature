@@ -21,3 +21,11 @@ Feature: Public navigation
     Then I should see "Create task"
     And I follow "Create task"
     Then I should see "Guardar"
+
+  Scenario: Visit edit task page
+    Given I am on "http://localhost"
+    Then I should see "Tasks"
+    And I follow "Tasks"
+    Then I follow "Edit task"
+    Then I should see "Guardar"
+    And the page title should be "^Edit Task:"

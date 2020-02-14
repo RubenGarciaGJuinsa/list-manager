@@ -32,9 +32,9 @@ if ( ! empty($tasks)) {
                 <td><?= $task['name'] ?></td>
                 <td><?= $lists[$task['list_id']] ?></td>
                 <td>
-                    <a href="/task/view/<?= $task['id'] ?>"><i class="fa fa-eye"></i></a>
-                    <a href="/task/update/<?= $task['id'] ?>"><i class="fa fa-pencil-alt"></i></a>
-                    <a href="/task/delete/<?= $task['id'] ?>" onclick="return confirm('Are you sure?')"><i class="fa fa-trash-alt"></i></a>
+                    <a href="/task/view/<?= $task['id'] ?>" title="View task"><i class="fa fa-eye"></i></a>
+                    <a href="/task/update/<?= $task['id']?>" title="Edit task"><i class="fa fa-pencil-alt"></i></a>
+                    <a href="/task/delete/<?= $task['id'] ?> " title="Delete task" onclick="return confirm('Are you sure?')"><i class="fa fa-trash-alt"></i></a>
                 </td>
             </tr>
             <?php
