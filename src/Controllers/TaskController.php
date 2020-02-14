@@ -22,6 +22,8 @@ class TaskController extends BaseController
 
     public function actionIndex()
     {
+        $this->title = "Tasks list";
+
         $tasks = $this->taskManager->getAllTasks();
 
         $lists = $this->getListsNamesById();
