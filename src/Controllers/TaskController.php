@@ -35,25 +35,39 @@ class TaskController extends BaseController
     {
         $this->title = 'New Task';
 
+        $task = [];
+
         $formData = Request::getPostParam('task', null);
         if ( ! empty($formData)) {
             try {
-                if ($insertId = $this->taskManager->createNewTask($formData['name'], $formData['list_id'])) {
-                    Alert::getInstance()->add(Application::t('Article', 'Tarea creada correctamente!'), 'success');
-                    header("Location: /task/view/".$insertId);
-
-                    return '';
+                $validation = $this->taskManager->validateTask($formData['name'], $formData['list_id']);
+                if (!empty($validation)) {
+                    foreach ($validation as $field => $fieldErrors) {
+                        foreach ($fieldErrors as $errorMessage) {
+                            Alert::getInstance()->add($errorMessage,'danger');
+                        }
+                    }
                 } else {
-                    throw new \Exception(Application::t('Article', 'Error cuando se estaba creando la tarea!'));
+                    if ($insertId = $this->taskManager->createNewTask($formData['name'], $formData['list_id'])) {
+                        Alert::getInstance()->add(Application::t('Article', 'Tarea creada correctamente!'), 'success');
+                        header("Location: /task/view/".$insertId);
+
+                        return '';
+                    } else {
+                        throw new \Exception(Application::t('Article', 'Error cuando se estaba creando la tarea!'));
+                    }
                 }
-            } catch (\Exception $e) {
+
+                $task = $formData;
+            }
+            catch (\Exception $e) {
                 Alert::getInstance()->add($e->getMessage(),'danger');
             }
         }
 
         $lists = (new ListManager(Db::getInstance()))->getLists();
 
-        return $this->render('form', ['lists' => $lists]);
+        return $this->render('form', ['lists' => $lists, 'task' => $task]);
     }
 
     public function actionView($id = '')
@@ -89,23 +103,36 @@ class TaskController extends BaseController
             header('Location: /task/index');
         }
 
+        $task = $this->taskManager->getTask($id);
+
         $formData = Request::getPostParam('task', null);
         if ( ! empty($formData)) {
-            try {
-                if ($this->taskManager->editTask($id, $formData['name'], $formData['list_id'])) {
-                    Alert::getInstance()->add(Application::t('Article', 'Tarea editada correctamente!'), 'success');
-                    header("Location: /task/view/".$id);
-
-                    return '';
-                } else {
-                    throw new \Exception(Application::t('Article', 'Error cuando se estaba editando la tarea!'));
+            $validation = $this->taskManager->validateTask($formData['name'], $formData['list_id']);
+            if (!empty($validation)) {
+                foreach ($validation as $field => $fieldErrors) {
+                    foreach ($fieldErrors as $errorMessage) {
+                        Alert::getInstance()->add($errorMessage,'danger');
+                    }
                 }
-            } catch (\Exception $e) {
-                Alert::getInstance()->add($e->getMessage(),'danger');
+            } else {
+                try {
+                    if ($this->taskManager->editTask($id, $formData['name'], $formData['list_id'])) {
+                        Alert::getInstance()->add(Application::t('Article', 'Tarea editada correctamente!'), 'success');
+                        header("Location: /task/view/".$id);
+
+                        return '';
+                    } else {
+                        throw new \Exception(Application::t('Article', 'Error cuando se estaba editando la tarea!'));
+                    }
+                } catch (\Exception $e) {
+                    Alert::getInstance()->add($e->getMessage(), 'danger');
+                }
             }
+
+            $task = $formData;
         }
 
-        $task = $this->taskManager->getTask($id);
+
         $this->title = 'Edit Task: ' . $task['name'];
 
         $lists = (new ListManager(Db::getInstance()))->getLists();
