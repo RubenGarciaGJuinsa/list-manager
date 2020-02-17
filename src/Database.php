@@ -12,7 +12,7 @@ class Database implements DbInterface, DbApplicationInterface
 {
     private static $instance;
 
-    protected static \SQLite3 $conn;
+    protected static ?\SQLite3 $conn;
     protected $dbFile;
 
     public function __construct()
@@ -20,11 +20,15 @@ class Database implements DbInterface, DbApplicationInterface
 
     }
 
-    public static function init(array $config): DbInterface
+    public static function init(array $config, $force = false): DbInterface
     {
-        if (empty(static::$instance)) {
+        if (empty(static::$instance) || $force) {
             $instance = new static();
             $instance->dbFile = $config['dbFile'];
+
+            if ($force) {
+                static::$conn = null;
+            }
 
             $instance->connect();
             static::$instance = $instance;
@@ -166,5 +170,11 @@ class Database implements DbInterface, DbApplicationInterface
         }
 
         return static::$instance;
+    }
+
+    public function executeFile(string $filePath): bool
+    {
+        $sql = file_get_contents($filePath);
+        return static::$conn->exec($sql);
     }
 }

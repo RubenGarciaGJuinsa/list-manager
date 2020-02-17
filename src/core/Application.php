@@ -210,13 +210,18 @@ class Application
         return realpath(__DIR__.'/../../');
     }
 
-    public function initDb()
+    public function initDb($force = false)
     {
-        if (empty($this->dbInstance)) {
+        if ($force || empty($this->dbInstance)) {
             $dbClass = $this->db['class'];
-            $this->dbInstance = $dbClass::init($this->db);
+            $this->dbInstance = $dbClass::init($this->db, $force);
         }
 
         return $this->dbInstance;
+    }
+
+    public function setDbConfig($dbConfig)
+    {
+        $this->db = $dbConfig;
     }
 }

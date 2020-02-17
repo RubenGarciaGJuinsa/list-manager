@@ -47,7 +47,7 @@ class DbMysql implements DbInterface, DbApplicationInterface
         return static::$instance;
     }
 
-    public static function init(array $config): DbInterface
+    public static function init(array $config, $force = false): DbInterface
     {
         static::$instance = new static($config);
 
@@ -210,5 +210,11 @@ class DbMysql implements DbInterface, DbApplicationInterface
         }
 
         return $result;
+    }
+
+    public function executeFile(string $filePath): bool
+    {
+        // TODO: Implement executeFile() method.
+        return false;
     }
 }

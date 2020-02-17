@@ -30,7 +30,7 @@ class DbPostgreSQL implements DbInterface, DbApplicationInterface
         $this->conn = pg_connect("host=$this->host dbname=$this->dbName user=$this->user password=$this->password");
     }
 
-    public static function init(array $config): DbInterface
+    public static function init(array $config, $force = false): DbInterface
     {
         static::$instance = new static($config);
 
@@ -125,5 +125,16 @@ class DbPostgreSQL implements DbInterface, DbApplicationInterface
         }
 
         return $result;
+    }
+
+    public function executeFile(string $filePath): bool
+    {
+        // TODO: Implement executeFile() method.
+        return false;
+    }
+
+    public static function getInstance(): DbInterface
+    {
+        // TODO: Implement getInstance() method.
     }
 }
