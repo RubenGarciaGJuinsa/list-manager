@@ -16,6 +16,8 @@ use Almacen\Core\Application;
         <link href="/css/normalize.css" rel="stylesheet">
         <link href="/css/bootstrap.min.css" rel="stylesheet">
         <link href="/css/custom.css" rel="stylesheet">
+        <script src="/js/jquery-3.4.1.slim.min.js"></script>
+        <script src="/js/jquery.validate.min.js"></script>
     </head>
 
     <body>
@@ -62,7 +64,6 @@ use Almacen\Core\Application;
             ?>
             <div><?= $content ?></div>
         </div>
-        <script src="/js/jquery-3.4.1.slim.min.js"></script>
         <script src="/js/popper.min.js"></script>
         <script src="/js/bootstrap.min.js"></script>
         <script src="https://kit.fontawesome.com/44a934414c.js" crossorigin="anonymous"></script>

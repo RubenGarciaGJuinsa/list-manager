@@ -7,7 +7,7 @@ use Almacen\Core\Application;
 
 ?>
 <div class="">
-    <form class="form" method="POST">
+    <form id="task-form" class="form" method="POST">
         <div class="form__row">
             <label class="form__label" for="nameField"><?= Application::t('form-task', 'Nombre') ?></label>
             <input type="text" class="form__input form-control" id="nameField" name="task[name]"
@@ -31,3 +31,22 @@ use Almacen\Core\Application;
         <button type="submit" class="btn btn-primary">Guardar</button>
     </form>
 </div>
+<script type="text/javascript">
+    (function($) {
+        $("#task-form").validate({
+            errorClass: "is-invalid",
+            rules: {
+                "task[name]": {
+                    required: true,
+                    maxlength: 255
+                }
+            },
+            messages: {
+                "task[name]": {
+                    required: "The name is required",
+                    maxlength: "The max length of the name is {0} characters",
+                }
+            }
+        });
+    })(jQuery);
+</script>

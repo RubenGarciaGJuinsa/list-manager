@@ -40,10 +40,21 @@ Feature: Test Task
   @task_crud
   @delete_task
   @javascript
-  Scenario: Edit task
+  Scenario: Delete task
     Then I should see "__BDD_TEST__Nombre de ejemplo modificado"
     Then I follow "Delete task" in the same row as "__BDD_TEST__Nombre de ejemplo modificado"
     And I confirm dialog
     Then I should not see "__BDD_TEST__Nombre de ejemplo modificado"
 
+  @task_crud
+  @error_creating_task
+  @javascript
+  Scenario: Add task
+    Then I should see "Create task"
+    And I follow "Create task"
+    And I press "Guardar"
+    Then I should see "The name is required"
+    When I fill in "Introducir nombre..." with "12345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890"
+    And I press "Guardar"
+    Then I should see "The max length of the name is 255 characters"
 
